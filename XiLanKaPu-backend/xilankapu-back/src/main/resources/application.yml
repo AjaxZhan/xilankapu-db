@@ -1,0 +1,139 @@
+# 环境配置
+spring:
+  profiles:
+    active: prod
+  messages:
+    basename: i18n/messages
+  servlet:
+    multipart:
+      max-file-size: 20MB
+---
+# 服务配置
+server:
+  port: 8089
+  # 支持Https
+#  ssl:
+#    key-store: keystore.p12
+#    key-password: 123456
+#    key-store-password: 123456
+#    enabled: true
+---
+# MybatisPlus配置
+mybatis-plus:
+  configuration:
+    # 关闭日志，便于后续配置自己的
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    # 驼峰命名
+    map-underscore-to-camel-case: true
+    # 自动映射，不灵活但是没关系
+    auto-mapping-behavior: full
+    # 自动映射未知，不做处理
+    auto-mapping-unknown-column-behavior: none
+  global-config:
+    db-config:
+      # 逻辑删除
+      logic-delete-field: delFlag
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+      # 主键自增
+      id-type: auto
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  type-aliases-package: cn.cagurzhan.domain
+
+
+---
+# OSS配置
+#oss:
+#  accessKey: # your key
+#  secretKey: # your key
+#  bucket: # your bucket
+#  domain: # your domain
+
+---
+# 日志配置
+logging:
+  level:
+    cn.cagurzhan: info
+    org.springframework: warn
+  config: classpath:logback-plus.xml
+---
+# springDoc
+springdoc:
+  api-docs:
+    # 开启接口文档
+    enabled: true
+  info:
+    # 标题
+    title: "标题：西兰卡普数据库"
+    # 描述
+    description: '描述：西兰卡普数据库的后台管理系统'
+    # 版本
+    version: '版本号: 1.0'
+    # 作者信息
+    contact:
+      name: CagurZhan
+      email: zexunzhan@foxmail.com
+      url: https://github.com/AjaxZhan/
+  #这里定义了两个分组，可定义多个，也可以不定义
+  group-configs:
+    - group: xilankapu
+      packages-to-scan: cn.cagurzhan
+
+---
+# Sa-Token配置
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: Authorization
+  # token有效期 设为一天 (必定过期) 单位: 秒
+  timeout: 86400
+  # 多端不同 token 有效期 可查看 LoginHelper.loginByDevice 方法自定义
+  # token最低活跃时间 (指定时间无操作就过期) 单位: 秒
+  active-timeout: 1800
+  # 允许动态设置 token 有效期
+  dynamic-active-timeout: true
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  # 是否尝试从header里读取token
+  is-read-header: true
+  # 是否尝试从cookie里读取token
+  is-read-cookie: false
+  # token前缀
+  token-prefix: "Bearer"
+  # jwt秘钥
+  jwt-secret-key: abcdefghijklmnopqrstuvwxyz
+
+# security配置
+security:
+  # 排除路径
+  excludes:
+    # 静态资源
+    - /*.html
+    - /**/*.html
+    - /**/*.css
+    - /**/*.js
+    # 公共路径
+    - /favicon.ico
+    - /error
+    # swagger 文档配置
+    - /*/api-docs
+    - /*/api-docs/**
+    # actuator 监控配置
+    - /actuator
+    - /actuator/**
+---
+# 用户配置
+user:
+  password:
+    # 重试次数
+    maxRetryCount: 5
+    # 锁定时间（min）
+    lockTime: 10
+---
+# OSS配置
+oss:
+ accessKey: # your key
+ secretKey: # your key
+ bucket: # your bucket
+ domain: # your domain

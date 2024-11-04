@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: xilankapu-mysql
+    ports:
+      - "7779:3306"
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: # your password
+    volumes:
+      - "./mysql/conf:/etc/mysql/conf.d"
+      - "./mysql/data:/var/lib/mysql"
+      - "./mysql/init:/docker-entrypoint-initdb.d"
+    networks:
+      - xilankapu-net
+  redis:
+    image: redis
+    container_name: xilankapu-redis
+    ports:
+      - "7776:6379"
+    networks:
+      - xilankapu-net
+  xilankapu-java:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: xilankapu-java
+    ports:
+      - "8089:8089"
+    networks:
+      - xilankapu-net
+    depends_on:
+      - mysql
+      - redis
+networks:
+  xilankapu-net:
+    name: xilankapu-java
+
